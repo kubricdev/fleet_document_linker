@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_fleet_mass_link_documents_wizard,fleet.mass.link.documents.wizard,model_fleet_mass_link_documents_wizard,fleet.fleet_group_manager,1,1,1,1
+access_fleet_mass_link_documents_line,fleet.mass.link.documents.line,model_fleet_mass_link_documents_line,fleet.fleet_group_manager,1,1,1,1
+access_fleet_documents_link_result_wizard,fleet.documents.link.result.wizard,model_fleet_documents_link_result_wizard,fleet.fleet_group_manager,1,1,1,1
+access_fleet_mass_link_documents_wizard_user,fleet.mass.link.documents.wizard user,model_fleet_mass_link_documents_wizard,fleet.fleet_group_user,1,1,1,0
+access_fleet_mass_link_documents_line_user,fleet.mass.link.documents.line user,model_fleet_mass_link_documents_line,fleet.fleet_group_user,1,1,1,0
+access_fleet_documents_link_result_wizard_user,fleet.documents.link.result.wizard user,model_fleet_documents_link_result_wizard,fleet.fleet_group_user,1,1,1,0

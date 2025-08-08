@@ -1,0 +1,1 @@
+from . import mass_link_documents_wizard

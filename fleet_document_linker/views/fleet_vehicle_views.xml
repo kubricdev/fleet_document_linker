@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Usar la referencia correcta a la vista de formulario de vehículos -->
+        <record id="view_fleet_vehicle_form_inherit" model="ir.ui.view">
+            <field name="name">fleet.vehicle.form.inherit</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+            <field name="arch" type="xml">
+                <!-- Agregar botones al button_box existente -->
+                <div name="button_box" position="inside">
+                    <!-- Botón para vinculación masiva de documentos -->
+                    <button name="action_mass_link_documents_by_name" 
+                            type="object" 
+                            class="oe_stat_button" 
+                            icon="fa-link"
+                            groups="fleet.fleet_group_manager">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Vincular</span>
+                            <span class="o_stat_text">Documentos</span>
+                        </div>
+                    </button>
+                    
+                    <!-- Botón para verificar módulo documents -->
+                    <button name="action_check_documents_module" 
+                            type="object" 
+                            class="oe_stat_button" 
+                            icon="fa-check-circle"
+                            groups="fleet.fleet_group_manager">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Verificar</span>
+                            <span class="o_stat_text">Documents</span>
+                        </div>
+                    </button>
+                    
+                    <!-- Botón para probar lógica de vinculación -->
+                    <button name="action_test_linking_logic" 
+                            type="object" 
+                            class="oe_stat_button" 
+                            icon="fa-search"
+                            groups="fleet.fleet_group_manager">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Probar</span>
+                            <span class="o_stat_text">Lógica</span>
+                        </div>
+                    </button>
+                    
+                    <!-- Botón para vinculación masiva avanzada -->
+                    <button name="action_advanced_mass_link" 
+                            type="object" 
+                            class="oe_stat_button" 
+                            icon="fa-cogs"
+                            groups="fleet.fleet_group_manager">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Avanzado</span>
+                            <span class="o_stat_text">Masivo</span>
+                        </div>
+                    </button>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

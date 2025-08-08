@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Acción de Servidor para Vinculación Masiva tipo documents.link_to_record_wizard -->
+        <record id="action_server_documents_link_to_fleet" model="ir.actions.server">
+            <field name="name">Vincular a Vehículos Fleet</field>
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="binding_model_id" ref="documents.model_documents_document"/>
+            <field name="binding_type">action</field>
+            <field name="state">code</field>
+            <field name="code">
+# Obtener documentos seleccionados
+selected_docs = records
+if not selected_docs:
+    raise UserError("No se han seleccionado documentos.")
+
+# Buscar vehículos en el sistema
+vehicles = env['fleet.vehicle'].search([])
+if not vehicles:
+    raise UserError("No hay vehículos registrados en el sistema.")
+
+# Contadores para estadísticas
+linked_count = 0
+error_count = 0
+error_messages = []
+
+# Procesar cada documento
+for doc in selected_docs:
+    if not doc.name:
+        error_messages.append("Documento sin nombre")
+        error_count += 1
+        continue
+    
+    # Extraer vehicle_id del nombre del documento
+    extracted_id = None
+    if '_' in doc.name:
+        extracted_id = doc.name.split('_')[0].upper()
+    else:
+        extracted_id = doc.name.split('.')[0].upper()
+    
+    # Buscar el vehículo correspondiente
+    vehicle_found = None
+    for vehicle in vehicles:
+        if vehicle.vehicle_id and vehicle.vehicle_id.upper() == extracted_id:
+            vehicle_found = vehicle
+            break
+    
+    if vehicle_found:
+        try:
+            # Verificar si ya está vinculado a este vehículo
+            if doc.res_model == 'fleet.vehicle' and doc.res_id == vehicle_found.id:
+                pass  # Ya vinculado
+            else:
+                # Vincular documento al vehículo
+                doc.write({
+                    'res_model': 'fleet.vehicle',
+                    'res_id': vehicle_found.id,
+                })
+                linked_count += 1
+        except Exception as e:
+            error_messages.append("Error al vincular documento")
+            error_count += 1
+    else:
+        error_messages.append("No se encontro vehiculo")
+        error_count += 1
+
+# Mostrar resultados simples
+if linked_count > 0:
+    title = 'Documentos vinculados exitosamente'
+    message = 'Se han vinculado documentos a vehiculos'
+    notification_type = 'success'
+else:
+    title = 'No se vincularon documentos'
+    message = 'Revise los nombres de los documentos'
+    notification_type = 'warning'
+
+action = {
+    'type': 'ir.actions.client',
+    'tag': 'display_notification',
+    'params': {
+        'title': title,
+        'message': message,
+        'type': notification_type,
+        'sticky': True,
+    }
+}
+            </field>
+            <field name="groups_id" eval="[(4, ref('documents.group_documents_user'))]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_mass_link_documents_wizard_form" model="ir.ui.view">
+            <field name="name">fleet.mass.link.documents.wizard.form</field>
+            <field name="model">fleet.mass.link.documents.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Vinculación Masiva de Documentos">
+                    <field name="state" invisible="1"/>
+                    
+                    <div invisible="state != 'step1'">
+                        <h2>Configuración de Vinculación Masiva</h2>
+                        <p>Configure los parámetros para buscar y vincular documentos a vehículos automáticamente.</p>
+                        
+                        <group>
+                            <group>
+                                <field name="vehicle_ids" widget="many2many_tags" options="{&quot;no_create&quot;: True}"/>
+                                 <field name="search_path" placeholder="/ruta/a/documentos"/>
+                                <field name="pattern_type"/>
+                            </group>
+                            <group>
+                                <field name="custom_pattern" invisible="pattern_type != 'custom'" required="pattern_type == 'custom'"/>
+                                <field name="file_extensions"/>
+                                <field name="advanced_mode"/>
+                            </group>
+                        </group>
+                        
+                        <div class="oe_clear">
+                            <h3>Información sobre Patrones:</h3>
+                            <ul>
+                                <li><strong>Por Vehicle ID:</strong> Busca documentos como "0001_archivo.pdf" donde "0001" es el vehicle_id</li>
+                                <li><strong>Por Placa:</strong> Busca documentos como "ABC123_documento.jpg" donde "ABC123" es la placa</li>
+                                <li><strong>Personalizado:</strong> Use {vehicle_field} como placeholder en su expresión regular</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div invisible="state != 'step2'">
+                        <h2>Documentos Encontrados</h2>
+                        <p>Revise los documentos encontrados y sus coincidencias antes de proceder con la vinculación.</p>
+                        
+                        <group>
+                            <group>
+                                <field name="total_documents_found" readonly="1"/>
+                                <field name="total_matches" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="total_vehicles" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <field name="document_line_ids" nolabel="1" context="{'tree_view_ref': 'fleet_document_linker.view_mass_link_documents_line_tree'}"/>
+                    </div>
+                    
+                    <div invisible="state != 'step3'">
+                        <h2>Proceso Completado</h2>
+                        <p>La vinculación masiva ha sido completada. Revise los resultados a continuación.</p>
+                        
+                        <group>
+                            <field name="total_matches" readonly="1"/>
+                        </group>
+                    </div>
+                    
+                    <footer>
+                        <div invisible="state != 'step1'">
+                            <button name="action_search_documents" string="Buscar Documentos" type="object" class="btn-primary"/>
+                            <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                        </div>
+                        
+                        <div invisible="state != 'step2'">
+                            <button name="action_link_documents" string="Vincular Documentos" type="object" class="btn-primary"/>
+                            <button name="action_back_to_step1" string="Atrás" type="object" class="btn-secondary"/>
+                            <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                        </div>
+                        
+                        <div invisible="state != 'step3'">
+                            <button string="Cerrar" class="btn-primary" special="cancel"/>
+                        </div>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <record id="view_mass_link_documents_line_tree" model="ir.ui.view">
+            <field name="name">fleet.mass.link.documents.line.tree</field>
+            <field name="model">fleet.mass.link.documents.line</field>
+            <field name="arch" type="xml">
+                <tree string="Documentos para Vinculación" editable="bottom" create="false">
+                    <field name="document_name" string="Documento"/>
+                    <field name="vehicle_id" string="Vehículo" options="{&quot;no_create&quot;: True, &quot;no_open&quot;: True}"/>
+                    <field name="matched" string="Coincide"/>
+                    <field name="linked" string="Vinculado" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_documents_link_result_wizard_form" model="ir.ui.view">
+            <field name="name">fleet.documents.link.result.wizard.form</field>
+            <field name="model">fleet.documents.link.result.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Resultados de Vinculación">
+                    <group>
+                        <field name="linked_count" readonly="1"/>
+                        <field name="error_count" readonly="1"/>
+                    </group>
+                    <field name="error_messages" readonly="1" invisible="error_count == 0"/>
+                    <footer>
+                        <button name="action_close" string="Cerrar" type="object" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_mass_link_documents_wizard" model="ir.actions.act_window">
+            <field name="name">Vinculación Masiva de Documentos</field>
+            <field name="res_model">fleet.mass.link.documents.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{}</field>
+        </record>
+        
+        <record id="action_documents_link_result_wizard" model="ir.actions.act_window">
+            <field name="name">Resultados de Vinculación</field>
+            <field name="res_model">fleet.documents.link.result.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{}</field>
+        </record>
+        
+        <!-- Menú para acceder al wizard -->
+        <menuitem id="menu_mass_link_documents_wizard"
+                  name="Vinculación Masiva de Documentos"
+                  parent="fleet.fleet_vehicles"
+                  action="action_mass_link_documents_wizard"
+                  sequence="50"/>
+        
+    </data>
+</odoo>
