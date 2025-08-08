@@ -84,7 +84,7 @@
         <record id="view_mass_link_documents_line_tree" model="ir.ui.view">
             <field name="name">fleet.mass.link.documents.line.tree</field>
             <field name="model">fleet.mass.link.documents.line</field>
-            <field name="arch" type="xml">
+            <field name="type">tree</field> <field name="arch" type="xml">
                 <tree string="Documentos para Vinculación" editable="bottom" create="false">
                     <field name="document_name" string="Documento"/>
                     <field name="vehicle_id" string="Vehículo" options="{&quot;no_create&quot;: True, &quot;no_open&quot;: True}"/>
@@ -127,7 +127,6 @@
             <field name="context">{}</field>
         </record>
         
-        <!-- Menú para acceder al wizard -->
         <menuitem id="menu_mass_link_documents_wizard"
                   name="Vinculación Masiva de Documentos"
                   parent="fleet.fleet_vehicles"
